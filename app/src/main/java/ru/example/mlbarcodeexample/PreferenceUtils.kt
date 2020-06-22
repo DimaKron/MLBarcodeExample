@@ -17,12 +17,10 @@
 package ru.example.mlbarcodeexample
 
 import android.content.Context
-import android.graphics.RectF
 import androidx.annotation.StringRes
 import androidx.preference.PreferenceManager
 import com.google.android.gms.common.images.Size
 import ru.example.mlbarcodeexample.camera.CameraSizePair
-import ru.example.mlbarcodeexample.camera.GraphicOverlay
 
 /** Utility class to retrieve shared preferences.  */
 object PreferenceUtils {

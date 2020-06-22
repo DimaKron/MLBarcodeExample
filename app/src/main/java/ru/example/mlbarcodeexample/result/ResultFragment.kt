@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.dialog_result.*
 import ru.example.mlbarcodeexample.R
-import ru.example.mlbarcodeexample.Workflow
-import ru.example.mlbarcodeexample.WorkflowState
+import ru.example.mlbarcodeexample.camera.Workflow
+import ru.example.mlbarcodeexample.camera.WorkflowState
 
 class ResultFragment: BottomSheetDialogFragment(){
 

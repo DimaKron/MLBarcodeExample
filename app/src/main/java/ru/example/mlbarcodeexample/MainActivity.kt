@@ -6,6 +6,8 @@ import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.example.mlbarcodeexample.barcodedetection.BarcodeProcessor
 import ru.example.mlbarcodeexample.camera.CameraSource
+import ru.example.mlbarcodeexample.camera.Workflow
+import ru.example.mlbarcodeexample.camera.WorkflowState
 import ru.example.mlbarcodeexample.result.ResultFragment
 import java.io.IOException
 

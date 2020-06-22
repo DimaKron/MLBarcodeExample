@@ -1,4 +1,4 @@
-package ru.example.mlbarcodeexample
+package ru.example.mlbarcodeexample.camera
 
 import androidx.annotation.MainThread
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode

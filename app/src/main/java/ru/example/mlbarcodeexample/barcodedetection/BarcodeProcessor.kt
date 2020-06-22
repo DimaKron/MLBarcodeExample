@@ -24,8 +24,8 @@ import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import ru.example.mlbarcodeexample.PreferenceUtils
-import ru.example.mlbarcodeexample.Workflow
-import ru.example.mlbarcodeexample.WorkflowState
+import ru.example.mlbarcodeexample.camera.Workflow
+import ru.example.mlbarcodeexample.camera.WorkflowState
 import ru.example.mlbarcodeexample.camera.FrameProcessorBase
 import ru.example.mlbarcodeexample.camera.GraphicOverlay
 import java.io.IOException
