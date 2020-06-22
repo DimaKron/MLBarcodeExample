@@ -27,12 +27,10 @@ import android.view.SurfaceHolder
 import android.view.WindowManager
 import com.google.android.gms.common.images.Size
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata
-import ru.example.mlbarcodeexample.PreferenceUtils
-import ru.example.mlbarcodeexample.R
 import ru.example.mlbarcodeexample.Utils
 import java.io.IOException
 import java.nio.ByteBuffer
-import java.util.IdentityHashMap
+import java.util.*
 import kotlin.math.abs
 import kotlin.math.ceil
 
@@ -50,6 +48,7 @@ import kotlin.math.ceil
 class CameraSource(private val graphicOverlay: GraphicOverlay) {
 
     private var camera: Camera? = null
+
     @FirebaseVisionImageMetadata.Rotation
     private var rotation: Int = 0
 
@@ -179,10 +178,10 @@ class CameraSource(private val graphicOverlay: GraphicOverlay) {
         setRotation(camera, parameters)
 
         val previewFpsRange = selectPreviewFpsRange(camera)
-                ?: throw IOException("Could not find suitable preview frames per second range.")
+            ?: throw IOException("Could not find suitable preview frames per second range.")
         parameters.setPreviewFpsRange(
-                previewFpsRange[Parameters.PREVIEW_FPS_MIN_INDEX],
-                previewFpsRange[Parameters.PREVIEW_FPS_MAX_INDEX]
+            previewFpsRange[Parameters.PREVIEW_FPS_MIN_INDEX],
+            previewFpsRange[Parameters.PREVIEW_FPS_MAX_INDEX]
         )
 
         parameters.previewFormat = IMAGE_FORMAT
@@ -222,29 +221,26 @@ class CameraSource(private val graphicOverlay: GraphicOverlay) {
     private fun setPreviewAndPictureSize(camera: Camera, parameters: Parameters) {
 
         // Gives priority to the preview size specified by the user if exists.
-        val sizePair: CameraSizePair = PreferenceUtils.getUserSpecifiedPreviewSize(context) ?: run {
+        val sizePair: CameraSizePair = run {
             // Camera preview size is based on the landscape mode, so we need to also use the aspect
             // ration of display in the same mode for comparison.
             val displayAspectRatioInLandscape: Float =
-                    if (Utils.isPortraitMode(graphicOverlay.context)) {
-                        graphicOverlay.height.toFloat() / graphicOverlay.width
-                    } else {
-                        graphicOverlay.width.toFloat() / graphicOverlay.height
-                    }
+                if (Utils.isPortraitMode(graphicOverlay.context)) {
+                    graphicOverlay.height.toFloat() / graphicOverlay.width
+                } else {
+                    graphicOverlay.width.toFloat() / graphicOverlay.height
+                }
             selectSizePair(camera, displayAspectRatioInLandscape)
         } ?: throw IOException("Could not find suitable preview size.")
 
         previewSize = sizePair.preview.also {
             Log.v(TAG, "Camera preview size: $it")
             parameters.setPreviewSize(it.width, it.height)
-            PreferenceUtils.saveStringPreference(context, R.string.pref_key_rear_camera_preview_size, it.toString())
         }
 
         sizePair.picture?.let { pictureSize ->
             Log.v(TAG, "Camera picture size: $pictureSize")
             parameters.setPictureSize(pictureSize.width, pictureSize.height)
-            PreferenceUtils.saveStringPreference(
-                    context, R.string.pref_key_rear_camera_picture_size, pictureSize.toString())
         }
     }
 
@@ -284,7 +280,8 @@ class CameraSource(private val graphicOverlay: GraphicOverlay) {
      */
     private fun createPreviewBuffer(previewSize: Size): ByteArray {
         val bitsPerPixel = ImageFormat.getBitsPerPixel(IMAGE_FORMAT)
-        val sizeInBits = previewSize.height.toLong() * previewSize.width.toLong() * bitsPerPixel.toLong()
+        val sizeInBits =
+            previewSize.height.toLong() * previewSize.width.toLong() * bitsPerPixel.toLong()
         val bufferSize = ceil(sizeInBits / 8.0).toInt() + 1
 
         // Creating the byte array this way and wrapping it, as opposed to using .allocate(),
@@ -342,8 +339,8 @@ class CameraSource(private val graphicOverlay: GraphicOverlay) {
 
                 if (!bytesToByteBuffer.containsKey(data)) {
                     Log.d(
-                            TAG,
-                            "Skipping frame. Could not find ByteBuffer associated with the image data from the camera."
+                        TAG,
+                        "Skipping frame. Could not find ByteBuffer associated with the image data from the camera."
                     )
                     return
                 }
@@ -401,7 +398,8 @@ class CameraSource(private val graphicOverlay: GraphicOverlay) {
 
                 try {
                     synchronized(processorLock) {
-                        val frameMetadata = FrameMetadata(previewSize!!.width, previewSize!!.height, rotation)
+                        val frameMetadata =
+                            FrameMetadata(previewSize!!.width, previewSize!!.height, rotation)
                         data?.let {
                             frameProcessor?.process(it, frameMetadata, graphicOverlay)
                         }
@@ -452,7 +450,10 @@ class CameraSource(private val graphicOverlay: GraphicOverlay) {
          * @param camera the camera to select a preview size from
          * @return the selected preview and picture size pair
          */
-        private fun selectSizePair(camera: Camera, displayAspectRatioInLandscape: Float): CameraSizePair? {
+        private fun selectSizePair(
+            camera: Camera,
+            displayAspectRatioInLandscape: Float
+        ): CameraSizePair? {
             val validPreviewSizes = Utils.generateValidPreviewSizeList(camera)
 
             var selectedPair: CameraSizePair? = null
@@ -484,8 +485,8 @@ class CameraSource(private val graphicOverlay: GraphicOverlay) {
                 for (sizePair in validPreviewSizes) {
                     val size = sizePair.preview
                     val diff =
-                            abs(size.width - DEFAULT_REQUESTED_CAMERA_PREVIEW_WIDTH) +
-                                    abs(size.height - DEFAULT_REQUESTED_CAMERA_PREVIEW_HEIGHT)
+                        abs(size.width - DEFAULT_REQUESTED_CAMERA_PREVIEW_WIDTH) +
+                                abs(size.height - DEFAULT_REQUESTED_CAMERA_PREVIEW_HEIGHT)
                     if (diff < minDiff) {
                         selectedPair = sizePair
                         minDiff = diff
