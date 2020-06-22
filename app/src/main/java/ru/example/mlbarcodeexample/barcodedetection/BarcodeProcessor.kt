@@ -24,14 +24,15 @@ import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import ru.example.mlbarcodeexample.PreferenceUtils
+import ru.example.mlbarcodeexample.Workflow
+import ru.example.mlbarcodeexample.WorkflowState
 import ru.example.mlbarcodeexample.camera.CameraReticleAnimator
 import ru.example.mlbarcodeexample.camera.FrameProcessorBase
 import ru.example.mlbarcodeexample.camera.GraphicOverlay
-import ru.example.mlbarcodeexample.camera.WorkflowModel
 import java.io.IOException
 
 /** A processor to run the barcode detector.  */
-class BarcodeProcessor(graphicOverlay: GraphicOverlay, private val workflowModel: WorkflowModel) :
+class BarcodeProcessor(graphicOverlay: GraphicOverlay, private val workflow: Workflow) :
     FrameProcessorBase<List<FirebaseVisionBarcode>>() {
 
     private val detector = FirebaseVision.getInstance().visionBarcodeDetector
@@ -47,7 +48,7 @@ class BarcodeProcessor(graphicOverlay: GraphicOverlay, private val workflowModel
         graphicOverlay: GraphicOverlay
     ) {
 
-        if (!workflowModel.isCameraLive) return
+        if (!workflow.isCameraLive) return
 
         Log.d(TAG, "Barcode result size: ${results.size}")
 
@@ -63,17 +64,17 @@ class BarcodeProcessor(graphicOverlay: GraphicOverlay, private val workflowModel
         if (barcodeInCenter == null) {
             cameraReticleAnimator.start()
             graphicOverlay.add(BarcodeReticleGraphic(graphicOverlay, cameraReticleAnimator))
-            workflowModel.setWorkflowState(WorkflowModel.WorkflowState.DETECTING)
+            workflow.onWorkflowStateChange(WorkflowState.DETECTING)
         } else {
             cameraReticleAnimator.cancel()
             if (PreferenceUtils.shouldDelayLoadingBarcodeResult(graphicOverlay.context)) {
                 val loadingAnimator = createLoadingAnimator(graphicOverlay, barcodeInCenter)
                 loadingAnimator.start()
                 graphicOverlay.add(BarcodeLoadingGraphic(graphicOverlay, loadingAnimator))
-                workflowModel.setWorkflowState(WorkflowModel.WorkflowState.SEARCHING)
+                workflow.onWorkflowStateChange(WorkflowState.SEARCHING)
             } else {
-                workflowModel.setWorkflowState(WorkflowModel.WorkflowState.DETECTED)
-                workflowModel.detectedBarcode.setValue(barcodeInCenter)
+                workflow.onWorkflowStateChange(WorkflowState.DETECTED)
+                workflow.onBarcodeDetected(barcodeInCenter)
             }
         }
         graphicOverlay.invalidate()
@@ -86,8 +87,8 @@ class BarcodeProcessor(graphicOverlay: GraphicOverlay, private val workflowModel
             addUpdateListener {
                 if ((animatedValue as Float).compareTo(endProgress) >= 0) {
                     graphicOverlay.clear()
-                    workflowModel.setWorkflowState(WorkflowModel.WorkflowState.SEARCHED)
-                    workflowModel.detectedBarcode.setValue(barcode)
+                    workflow.onWorkflowStateChange(WorkflowState.SEARCHED)
+                    workflow.onBarcodeDetected(barcode)
                 } else {
                     graphicOverlay.invalidate()
                 }
