@@ -21,15 +21,12 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode
-import java.util.*
 
 /** View model for handling application workflow based on camera preview.  */
 class WorkflowModel(application: Application) : AndroidViewModel(application) {
 
     val workflowState = MutableLiveData<WorkflowState>()
     val detectedBarcode = MutableLiveData<FirebaseVisionBarcode>()
-
-    private val objectIdsToSearch = HashSet<Int>()
 
     var isCameraLive = false
         private set
@@ -49,7 +46,6 @@ class WorkflowModel(application: Application) : AndroidViewModel(application) {
 
     fun markCameraLive() {
         isCameraLive = true
-        objectIdsToSearch.clear()
     }
 
     fun markCameraFrozen() {
