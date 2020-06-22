@@ -26,20 +26,16 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import ru.example.mlbarcodeexample.PreferenceUtils
 import ru.example.mlbarcodeexample.Workflow
 import ru.example.mlbarcodeexample.WorkflowState
-import ru.example.mlbarcodeexample.camera.CameraReticleAnimator
 import ru.example.mlbarcodeexample.camera.FrameProcessorBase
 import ru.example.mlbarcodeexample.camera.GraphicOverlay
 import java.io.IOException
 
 /** A processor to run the barcode detector.  */
-class BarcodeProcessor(graphicOverlay: GraphicOverlay, private val workflow: Workflow) :
-    FrameProcessorBase<List<FirebaseVisionBarcode>>() {
+class BarcodeProcessor(private val workflow: Workflow) : FrameProcessorBase<List<FirebaseVisionBarcode>>() {
 
     private val detector = FirebaseVision.getInstance().visionBarcodeDetector
-    private val cameraReticleAnimator: CameraReticleAnimator = CameraReticleAnimator(graphicOverlay)
 
-    override fun detectInImage(image: FirebaseVisionImage): Task<List<FirebaseVisionBarcode>> =
-        detector.detectInImage(image)
+    override fun detectInImage(image: FirebaseVisionImage): Task<List<FirebaseVisionBarcode>> = detector.detectInImage(image)
 
     @MainThread
     override fun onSuccess(
@@ -62,15 +58,11 @@ class BarcodeProcessor(graphicOverlay: GraphicOverlay, private val workflow: Wor
 
         graphicOverlay.clear()
         if (barcodeInCenter == null) {
-            cameraReticleAnimator.start()
-            //graphicOverlay.add(BarcodeReticleGraphic(graphicOverlay, cameraReticleAnimator))
             workflow.onWorkflowStateChange(WorkflowState.DETECTING)
         } else {
-            cameraReticleAnimator.cancel()
             if (PreferenceUtils.shouldDelayLoadingBarcodeResult(graphicOverlay.context)) {
                 val loadingAnimator = createLoadingAnimator(graphicOverlay, barcodeInCenter)
                 loadingAnimator.start()
-                //graphicOverlay.add(BarcodeLoadingGraphic(graphicOverlay, loadingAnimator))
                 workflow.onWorkflowStateChange(WorkflowState.SEARCHING)
             } else {
                 workflow.onWorkflowStateChange(WorkflowState.DETECTED)

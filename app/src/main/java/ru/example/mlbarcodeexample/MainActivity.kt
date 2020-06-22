@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity(), Workflow {
 
         isCameraLive = false
         workflowState = WorkflowState.NOT_STARTED
-        cameraSource?.setFrameProcessor(BarcodeProcessor(cameraGraphicOverlay, this))
+        cameraSource?.setFrameProcessor(BarcodeProcessor(this))
         onWorkflowStateChange(WorkflowState.DETECTING)
     }
 
