@@ -21,7 +21,6 @@ import android.graphics.RectF
 import androidx.annotation.StringRes
 import androidx.preference.PreferenceManager
 import com.google.android.gms.common.images.Size
-import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode
 import ru.example.mlbarcodeexample.camera.CameraSizePair
 import ru.example.mlbarcodeexample.camera.GraphicOverlay
 
@@ -33,21 +32,6 @@ object PreferenceUtils {
                 .edit()
                 .putString(context.getString(prefKeyId), value)
                 .apply()
-    }
-
-    fun getProgressToMeetBarcodeSizeRequirement(
-        overlay: GraphicOverlay,
-        barcode: FirebaseVisionBarcode
-    ): Float {
-        val context = overlay.context
-        return if (getBooleanPref(context, R.string.pref_key_enable_barcode_size_check, false)) {
-            val reticleBoxWidth = getBarcodeReticleBox(overlay).width()
-            val barcodeWidth = overlay.translateX(barcode.boundingBox?.width()?.toFloat() ?: 0f)
-            val requiredWidth = reticleBoxWidth * getIntPref(context, R.string.pref_key_minimum_barcode_width, 50) / 100
-            (barcodeWidth / requiredWidth).coerceAtMost(1f)
-        } else {
-            1f
-        }
     }
 
     fun getBarcodeReticleBox(overlay: GraphicOverlay): RectF {

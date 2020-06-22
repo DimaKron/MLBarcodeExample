@@ -66,22 +66,14 @@ class BarcodeProcessor(graphicOverlay: GraphicOverlay, private val workflowModel
             workflowModel.setWorkflowState(WorkflowModel.WorkflowState.DETECTING)
         } else {
             cameraReticleAnimator.cancel()
-            val sizeProgress = PreferenceUtils.getProgressToMeetBarcodeSizeRequirement(graphicOverlay, barcodeInCenter)
-            if (sizeProgress < 1) {
-                // Barcode in the camera view is too small, so prompt user to move camera closer.
-                graphicOverlay.add(BarcodeConfirmingGraphic(graphicOverlay, barcodeInCenter))
-                workflowModel.setWorkflowState(WorkflowModel.WorkflowState.CONFIRMING)
+            if (PreferenceUtils.shouldDelayLoadingBarcodeResult(graphicOverlay.context)) {
+                val loadingAnimator = createLoadingAnimator(graphicOverlay, barcodeInCenter)
+                loadingAnimator.start()
+                graphicOverlay.add(BarcodeLoadingGraphic(graphicOverlay, loadingAnimator))
+                workflowModel.setWorkflowState(WorkflowModel.WorkflowState.SEARCHING)
             } else {
-                // Barcode size in the camera view is sufficient.
-                if (PreferenceUtils.shouldDelayLoadingBarcodeResult(graphicOverlay.context)) {
-                    val loadingAnimator = createLoadingAnimator(graphicOverlay, barcodeInCenter)
-                    loadingAnimator.start()
-                    graphicOverlay.add(BarcodeLoadingGraphic(graphicOverlay, loadingAnimator))
-                    workflowModel.setWorkflowState(WorkflowModel.WorkflowState.SEARCHING)
-                } else {
-                    workflowModel.setWorkflowState(WorkflowModel.WorkflowState.DETECTED)
-                    workflowModel.detectedBarcode.setValue(barcodeInCenter)
-                }
+                workflowModel.setWorkflowState(WorkflowModel.WorkflowState.DETECTED)
+                workflowModel.detectedBarcode.setValue(barcodeInCenter)
             }
         }
         graphicOverlay.invalidate()
