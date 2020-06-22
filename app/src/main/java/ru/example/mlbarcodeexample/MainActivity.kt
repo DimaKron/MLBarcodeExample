@@ -6,7 +6,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.google.common.base.Objects
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.example.mlbarcodeexample.barcodedetection.BarcodeProcessor
 import ru.example.mlbarcodeexample.camera.CameraSource
@@ -87,7 +86,7 @@ class MainActivity : AppCompatActivity() {
         // Observes the workflow state changes, if happens, update the overlay view indicators and
         // camera preview state.
         workflowModel!!.workflowState.observe(this, Observer { workflowState ->
-            if (workflowState == null || Objects.equal(currentWorkflowState, workflowState)) {
+            if (workflowState == null || currentWorkflowState == workflowState) {
                 return@Observer
             }
 
