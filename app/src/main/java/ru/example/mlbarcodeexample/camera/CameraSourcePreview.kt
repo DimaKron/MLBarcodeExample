@@ -17,6 +17,7 @@
 package ru.example.mlbarcodeexample.camera
 
 import android.content.Context
+import android.content.res.Configuration
 import android.util.AttributeSet
 import android.util.Log
 import android.view.SurfaceHolder
@@ -24,7 +25,6 @@ import android.view.SurfaceView
 import android.widget.FrameLayout
 import com.google.android.gms.common.images.Size
 import ru.example.mlbarcodeexample.R
-import ru.example.mlbarcodeexample.Utils
 import java.io.IOException
 
 /** Preview the camera image in the screen.  */
@@ -76,44 +76,61 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        val layoutWidth = right - left
-        val layoutHeight = bottom - top
-
-        cameraSource?.previewSize?.let { cameraPreviewSize = it }
-
-        val previewSizeRatio = cameraPreviewSize?.let { size ->
-            if (Utils.isPortraitMode(context)) {
-                // Camera's natural orientation is landscape, so need to swap width and height.
-                size.height.toFloat() / size.width
-            } else {
-                size.width.toFloat() / size.height
+        var previewWidth = 320
+        var previewHeight = 240
+        if (cameraSource != null) {
+            val size: Size? = cameraSource?.previewSize
+            if (size != null) {
+                previewWidth = size.width
+                previewHeight = size.height
             }
-        } ?: layoutWidth.toFloat() / layoutHeight.toFloat()
+        }
 
-        // Match the width of the child view to its parent.
-        val childHeight = (layoutWidth / previewSizeRatio).toInt()
-        if (childHeight <= layoutHeight) {
-            for (i in 0 until childCount) {
-                getChildAt(i).layout(0, 0, layoutWidth, childHeight)
-            }
+        // Swap width and height sizes when in portrait, since it will be rotated 90 degrees
+
+        // Swap width and height sizes when in portrait, since it will be rotated 90 degrees
+        if (isPortraitMode()) {
+            val tmp = previewWidth
+            previewWidth = previewHeight
+            previewHeight = tmp
+        }
+
+        val viewWidth = right - left
+        val viewHeight = bottom - top
+
+        val childWidth: Int
+        val childHeight: Int
+        var childXOffset = 0
+        var childYOffset = 0
+        val widthRatio = viewWidth.toFloat() / previewWidth.toFloat()
+        val heightRatio = viewHeight.toFloat() / previewHeight.toFloat()
+
+        // To fill the view with the camera preview, while also preserving the correct aspect ratio,
+        // it is usually necessary to slightly oversize the child and to crop off portions along one
+        // of the dimensions.  We scale up based on the dimension requiring the most correction, and
+        // compute a crop offset for the other dimension.
+
+        // To fill the view with the camera preview, while also preserving the correct aspect ratio,
+        // it is usually necessary to slightly oversize the child and to crop off portions along one
+        // of the dimensions.  We scale up based on the dimension requiring the most correction, and
+        // compute a crop offset for the other dimension.
+        if (widthRatio > heightRatio) {
+            childWidth = viewWidth
+            childHeight = (previewHeight.toFloat() * widthRatio).toInt()
+            childYOffset = (childHeight - viewHeight) / 2
         } else {
-            // When the child view is too tall to be fitted in its parent: If the child view is
-            // static overlay view container (contains views such as bottom prompt chip), we apply
-            // the size of the parent view to it. Otherwise, we offset the top/bottom position
-            // equally to position it in the center of the parent.
-            val excessLenInHalf = (childHeight - layoutHeight) / 2
-            for (i in 0 until childCount) {
-                val childView = getChildAt(i)
-                when (childView.id) {
-                    R.id.static_overlay_container -> {
-                        childView.layout(0, 0, layoutWidth, layoutHeight)
-                    }
-                    else -> {
-                        childView.layout(
-                            0, -excessLenInHalf, layoutWidth, layoutHeight + excessLenInHalf)
-                    }
-                }
-            }
+            childWidth = (previewWidth.toFloat() * heightRatio).toInt()
+            childHeight = viewHeight
+            childXOffset = (childWidth - viewWidth) / 2
+        }
+
+        for (i in 0 until childCount) {
+            // One dimension will be cropped.  We shift child over or up by this offset and adjust
+            // the size to maintain the proper aspect ratio.
+            getChildAt(i).layout(
+                -1 * childXOffset, -1 * childYOffset,
+                childWidth - childXOffset, childHeight - childYOffset
+            )
         }
 
         try {
@@ -121,6 +138,18 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
         } catch (e: IOException) {
             Log.e(TAG, "Could not start camera source.", e)
         }
+    }
+
+    private fun isPortraitMode(): Boolean {
+        val orientation: Int = context.getResources().getConfiguration().orientation
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            return false
+        }
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            return true
+        }
+        Log.d(TAG, "isPortraitMode returning false by default")
+        return false
     }
 
     private inner class SurfaceCallback : SurfaceHolder.Callback {
