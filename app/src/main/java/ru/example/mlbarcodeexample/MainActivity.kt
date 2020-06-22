@@ -1,8 +1,6 @@
 package ru.example.mlbarcodeexample
 
 import android.os.Bundle
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode
 import kotlinx.android.synthetic.main.activity_main.*
@@ -28,8 +26,6 @@ class MainActivity : AppCompatActivity(), Workflow {
 
         setContentView(R.layout.activity_main)
         cameraSource = CameraSource(cameraGraphicOverlay)
-
-        // TODO Если что тут рестор
     }
 
     override fun onResume() {
