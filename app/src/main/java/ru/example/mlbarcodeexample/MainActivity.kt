@@ -19,6 +19,10 @@ import java.io.IOException
 // TODO разрешение
 class MainActivity: AppCompatActivity(), View.OnClickListener {
 
+    companion object {
+        private const val TAG = "LiveBarcodeActivity"
+    }
+
     private var cameraSource: CameraSource? = null
     private var preview: CameraSourcePreview? = null
     private var graphicOverlay: GraphicOverlay? = null
@@ -158,7 +162,4 @@ class MainActivity: AppCompatActivity(), View.OnClickListener {
         })
     }
 
-    companion object {
-        private const val TAG = "LiveBarcodeActivity"
-    }
 }
