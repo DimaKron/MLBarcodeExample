@@ -10,14 +10,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/camera_preview_overlay_kotlin"/>
+        <ru.example.mlbarcodeexample.camera.GraphicOverlay
+            android:id="@+id/camera_preview_graphic_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     </ru.example.mlbarcodeexample.camera.CameraSourcePreview>
-
-    <include
-        layout="@layout/top_action_bar_in_live_camera"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

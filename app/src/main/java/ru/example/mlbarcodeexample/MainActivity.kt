@@ -1,6 +1,5 @@
 package ru.example.mlbarcodeexample
 
-import android.hardware.Camera
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -17,7 +16,7 @@ import ru.example.mlbarcodeexample.camera.WorkflowModel
 import java.io.IOException
 
 // TODO разрешение
-class MainActivity: AppCompatActivity(), View.OnClickListener {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     companion object {
         private const val TAG = "LiveBarcodeActivity"
@@ -41,13 +40,13 @@ class MainActivity: AppCompatActivity(), View.OnClickListener {
             cameraSource = CameraSource(this)
         }
 
-        findViewById<View>(R.id.close_button).setOnClickListener(this)
-        flashButton = findViewById<View>(R.id.flash_button).apply {
-            setOnClickListener(this@MainActivity)
-        }
-        settingsButton = findViewById<View>(R.id.settings_button).apply {
-            setOnClickListener(this@MainActivity)
-        }
+//        findViewById<View>(R.id.close_button).setOnClickListener(this)
+//        flashButton = findViewById<View>(R.id.flash_button).apply {
+//            setOnClickListener(this@MainActivity)
+//        }
+//        settingsButton = findViewById<View>(R.id.settings_button).apply {
+//            setOnClickListener(this@MainActivity)
+//        }
 
         setUpWorkflowModel()
     }
@@ -79,24 +78,25 @@ class MainActivity: AppCompatActivity(), View.OnClickListener {
         cameraSource = null
     }
 
+    //TODO: клики по кнопкам
     override fun onClick(view: View) {
         when (view.id) {
-            R.id.close_button -> onBackPressed()
-            R.id.flash_button -> {
-                flashButton?.let {
-                    if (it.isSelected) {
-                        it.isSelected = false
-                        cameraSource?.updateFlashMode(Camera.Parameters.FLASH_MODE_OFF)
-                    } else {
-                        it.isSelected = true
-                        cameraSource!!.updateFlashMode(Camera.Parameters.FLASH_MODE_TORCH)
-                    }
-                }
-            }
-            R.id.settings_button -> {
-                settingsButton?.isEnabled = false
-                //startActivity(Intent(this, SettingsActivity::class.java))
-            }
+//            R.id.close_button -> onBackPressed()
+//            R.id.flash_button -> {
+//                flashButton?.let {
+//                    if (it.isSelected) {
+//                        it.isSelected = false
+//                        cameraSource?.updateFlashMode(Camera.Parameters.FLASH_MODE_OFF)
+//                    } else {
+//                        it.isSelected = true
+//                        cameraSource!!.updateFlashMode(Camera.Parameters.FLASH_MODE_TORCH)
+//                    }
+//                }
+//            }
+//            R.id.settings_button -> {
+//                settingsButton?.isEnabled = false
+//                //startActivity(Intent(this, SettingsActivity::class.java))
+//            }
         }
     }
 
@@ -150,7 +150,8 @@ class MainActivity: AppCompatActivity(), View.OnClickListener {
                 WorkflowModel.WorkflowState.DETECTED, WorkflowModel.WorkflowState.SEARCHED -> {
                     stopCameraPreview()
                 }
-                else -> {}
+                else -> {
+                }
             }
         })
 
