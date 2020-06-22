@@ -19,10 +19,8 @@ class MainActivity : AppCompatActivity(), Workflow {
 
     private var cameraSource: CameraSource? = null
 
-    // TODO needSave?
     override var isCameraLive = false
 
-    // TODO needSave?
     override var workflowState: WorkflowState? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,7 +43,7 @@ class MainActivity : AppCompatActivity(), Workflow {
 
     override fun onPostResume() {
         super.onPostResume()
-        //BarcodeResultFragment.dismiss(supportFragmentManager)
+        (supportFragmentManager.findFragmentByTag(ResultFragment::class.java.simpleName) as? ResultFragment)?.dismiss()
     }
 
     override fun onPause() {
@@ -82,7 +80,8 @@ class MainActivity : AppCompatActivity(), Workflow {
     }
 
     private fun startCameraPreview() {
-        val cameraSource = this.cameraSource ?: return
+        val cameraSource = this.cameraSource?: return
+
         if (!isCameraLive) {
             try {
                 isCameraLive = true
