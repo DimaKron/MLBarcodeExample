@@ -2,11 +2,13 @@ package ru.example.mlbarcodeexample
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode
 import kotlinx.android.synthetic.main.activity_main.*
 import ru.example.mlbarcodeexample.barcodedetection.BarcodeProcessor
 import ru.example.mlbarcodeexample.camera.CameraSource
+import ru.example.mlbarcodeexample.result.ResultFragment
 import java.io.IOException
 
 //TODO: разрешение
@@ -59,8 +61,8 @@ class MainActivity : AppCompatActivity(), Workflow {
     }
 
     override fun onBarcodeDetected(barcode: FirebaseVisionBarcode) {
-        //BarcodeResultFragment.show(supportFragmentManager, barcodeFieldList)
-        Toast.makeText(this, "${barcode.rawValue}", Toast.LENGTH_LONG).show()
+        ResultFragment.newInstance(barcode.rawValue)
+            .show(supportFragmentManager, ResultFragment::class.java.simpleName)
     }
 
     override fun onWorkflowStateChange(workflowState: WorkflowState) {
