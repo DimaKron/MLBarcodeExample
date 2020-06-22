@@ -1,4 +1,4 @@
-package ru.example.mlbarcodeexample.result
+package ru.example.mlbarcodeexample
 
 import android.content.DialogInterface
 import android.os.Bundle
@@ -7,14 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.dialog_result.*
-import ru.example.mlbarcodeexample.R
 import ru.example.mlbarcodeexample.camera.Workflow
 import ru.example.mlbarcodeexample.camera.WorkflowState
 
 class ResultFragment: BottomSheetDialogFragment(){
 
     companion object{
-        fun newInstance(barcode: String?) = ResultFragment().apply {
+        fun newInstance(barcode: String?) = ResultFragment()
+            .apply {
             arguments = Bundle().apply {
                 putString("barcode", barcode)
             }

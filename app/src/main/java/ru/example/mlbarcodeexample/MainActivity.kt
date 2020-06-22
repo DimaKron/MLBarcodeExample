@@ -8,7 +8,6 @@ import ru.example.mlbarcodeexample.barcodedetection.BarcodeProcessor
 import ru.example.mlbarcodeexample.camera.CameraSource
 import ru.example.mlbarcodeexample.camera.Workflow
 import ru.example.mlbarcodeexample.camera.WorkflowState
-import ru.example.mlbarcodeexample.result.ResultFragment
 import java.io.IOException
 
 //TODO: разрешение
