@@ -63,14 +63,14 @@ class BarcodeProcessor(graphicOverlay: GraphicOverlay, private val workflow: Wor
         graphicOverlay.clear()
         if (barcodeInCenter == null) {
             cameraReticleAnimator.start()
-            graphicOverlay.add(BarcodeReticleGraphic(graphicOverlay, cameraReticleAnimator))
+            //graphicOverlay.add(BarcodeReticleGraphic(graphicOverlay, cameraReticleAnimator))
             workflow.onWorkflowStateChange(WorkflowState.DETECTING)
         } else {
             cameraReticleAnimator.cancel()
             if (PreferenceUtils.shouldDelayLoadingBarcodeResult(graphicOverlay.context)) {
                 val loadingAnimator = createLoadingAnimator(graphicOverlay, barcodeInCenter)
                 loadingAnimator.start()
-                graphicOverlay.add(BarcodeLoadingGraphic(graphicOverlay, loadingAnimator))
+                //graphicOverlay.add(BarcodeLoadingGraphic(graphicOverlay, loadingAnimator))
                 workflow.onWorkflowStateChange(WorkflowState.SEARCHING)
             } else {
                 workflow.onWorkflowStateChange(WorkflowState.DETECTED)
