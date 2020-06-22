@@ -16,26 +16,26 @@
 
 package ru.example.mlbarcodeexample.barcodedetection
 
-import android.animation.ValueAnimator
 import android.util.Log
 import androidx.annotation.MainThread
 import com.google.android.gms.tasks.Task
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
-import ru.example.mlbarcodeexample.PreferenceUtils
-import ru.example.mlbarcodeexample.camera.Workflow
-import ru.example.mlbarcodeexample.camera.WorkflowState
 import ru.example.mlbarcodeexample.camera.FrameProcessorBase
 import ru.example.mlbarcodeexample.camera.GraphicOverlay
+import ru.example.mlbarcodeexample.camera.Workflow
+import ru.example.mlbarcodeexample.camera.WorkflowState
 import java.io.IOException
 
 /** A processor to run the barcode detector.  */
-class BarcodeProcessor(private val workflow: Workflow) : FrameProcessorBase<List<FirebaseVisionBarcode>>() {
+class BarcodeProcessor(private val workflow: Workflow) :
+    FrameProcessorBase<List<FirebaseVisionBarcode>>() {
 
     private val detector = FirebaseVision.getInstance().visionBarcodeDetector
 
-    override fun detectInImage(image: FirebaseVisionImage): Task<List<FirebaseVisionBarcode>> = detector.detectInImage(image)
+    override fun detectInImage(image: FirebaseVisionImage): Task<List<FirebaseVisionBarcode>> =
+        detector.detectInImage(image)
 
     @MainThread
     override fun onSuccess(
@@ -60,31 +60,10 @@ class BarcodeProcessor(private val workflow: Workflow) : FrameProcessorBase<List
         if (barcodeInCenter == null) {
             workflow.onWorkflowStateChange(WorkflowState.DETECTING)
         } else {
-            if (PreferenceUtils.shouldDelayLoadingBarcodeResult(graphicOverlay.context)) {
-                val loadingAnimator = createLoadingAnimator(graphicOverlay, barcodeInCenter)
-                loadingAnimator.start()
-                workflow.onWorkflowStateChange(WorkflowState.SEARCHING)
-            } else {
-                workflow.onWorkflowStateChange(WorkflowState.DETECTED)
-                workflow.onBarcodeDetected(barcodeInCenter)
-            }
+            workflow.onWorkflowStateChange(WorkflowState.DETECTED)
+            workflow.onBarcodeDetected(barcodeInCenter)
         }
         graphicOverlay.invalidate()
-    }
-
-    private fun createLoadingAnimator(graphicOverlay: GraphicOverlay, barcode: FirebaseVisionBarcode): ValueAnimator {
-        val endProgress = 1.1f
-        return ValueAnimator.ofFloat(0f, endProgress).apply {
-            addUpdateListener {
-                if ((animatedValue as Float).compareTo(endProgress) >= 0) {
-                    graphicOverlay.clear()
-                    workflow.onWorkflowStateChange(WorkflowState.SEARCHED)
-                    workflow.onBarcodeDetected(barcode)
-                } else {
-                    graphicOverlay.invalidate()
-                }
-            }
-        }
     }
 
     override fun onFailure(e: Exception) {

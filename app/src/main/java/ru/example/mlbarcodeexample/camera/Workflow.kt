@@ -19,7 +19,5 @@ interface Workflow {
 enum class WorkflowState {
     NOT_STARTED,
     DETECTING,
-    DETECTED,
-    SEARCHING,
-    SEARCHED
+    DETECTED
 }

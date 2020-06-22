@@ -70,15 +70,16 @@ class MainActivity : AppCompatActivity(), Workflow {
             WorkflowState.DETECTING -> {
                 startCameraPreview()
             }
-            WorkflowState.SEARCHING, WorkflowState.DETECTED, WorkflowState.SEARCHED -> {
+            WorkflowState.DETECTED -> {
                 stopCameraPreview()
             }
-            else -> {}
+            else -> {
+            }
         }
     }
 
     private fun startCameraPreview() {
-        val cameraSource = this.cameraSource?: return
+        val cameraSource = this.cameraSource ?: return
 
         if (!isCameraLive) {
             try {

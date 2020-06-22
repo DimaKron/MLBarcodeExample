@@ -23,7 +23,8 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.View
 import ru.example.mlbarcodeexample.Utils
-import java.util.ArrayList
+import ru.example.mlbarcodeexample.camera.GraphicOverlay.Graphic
+import java.util.*
 
 /**
  * A view which renders a series of custom graphics to be overlaid on top of an associated preview
@@ -98,10 +99,10 @@ class GraphicOverlay(context: Context, attrs: AttributeSet) : View(context, attr
      * coordinate system.
      */
     fun translateRect(rect: Rect) = RectF(
-            translateX(rect.left.toFloat()),
-            translateY(rect.top.toFloat()),
-            translateX(rect.right.toFloat()),
-            translateY(rect.bottom.toFloat())
+        translateX(rect.left.toFloat()),
+        translateY(rect.top.toFloat()),
+        translateX(rect.right.toFloat()),
+        translateY(rect.bottom.toFloat())
     )
 
     /** Draws the overlay with its associated graphic objects.  */

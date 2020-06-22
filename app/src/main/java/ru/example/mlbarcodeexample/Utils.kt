@@ -78,8 +78,6 @@ object Utils {
                 validPreviewSizes.add(CameraSizePair(previewSize, null))
             }
         }
-
         return validPreviewSizes
     }
-
 }

@@ -27,12 +27,10 @@ object PreferenceUtils {
 
     fun saveStringPreference(context: Context, @StringRes prefKeyId: Int, value: String?) {
         PreferenceManager.getDefaultSharedPreferences(context)
-                .edit()
-                .putString(context.getString(prefKeyId), value)
-                .apply()
+            .edit()
+            .putString(context.getString(prefKeyId), value)
+            .apply()
     }
-
-    fun shouldDelayLoadingBarcodeResult(context: Context): Boolean = getBooleanPref(context, R.string.pref_key_delay_loading_barcode_result, true)
 
     fun getUserSpecifiedPreviewSize(context: Context): CameraSizePair? {
         return try {
@@ -40,12 +38,11 @@ object PreferenceUtils {
             val pictureSizePrefKey = context.getString(R.string.pref_key_rear_camera_picture_size)
             val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
             CameraSizePair(
-                    Size.parseSize(sharedPreferences.getString(previewSizePrefKey, null)),
-                    Size.parseSize(sharedPreferences.getString(pictureSizePrefKey, null)))
+                Size.parseSize(sharedPreferences.getString(previewSizePrefKey, null)),
+                Size.parseSize(sharedPreferences.getString(pictureSizePrefKey, null))
+            )
         } catch (e: Exception) {
             null
         }
     }
-
-    private fun getBooleanPref(context: Context, @StringRes prefKeyId: Int, defaultValue: Boolean): Boolean = PreferenceManager.getDefaultSharedPreferences(context).getBoolean(context.getString(prefKeyId), defaultValue)
 }
