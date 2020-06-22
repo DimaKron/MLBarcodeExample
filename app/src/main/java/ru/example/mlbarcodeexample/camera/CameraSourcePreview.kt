@@ -24,7 +24,7 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.widget.FrameLayout
 import com.google.android.gms.common.images.Size
-import ru.example.mlbarcodeexample.R
+import kotlinx.android.synthetic.main.activity_main.view.*
 import java.io.IOException
 
 /** Preview the camera image in the screen.  */
@@ -34,16 +34,11 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
         holder.addCallback(SurfaceCallback())
         addView(this)
     }
-    private var graphicOverlay: GraphicOverlay? = null
+
     private var startRequested = false
     private var surfaceAvailable = false
     private var cameraSource: CameraSource? = null
-    private var cameraPreviewSize: Size? = null
 
-    override fun onFinishInflate() {
-        super.onFinishInflate()
-        graphicOverlay = findViewById(R.id.camera_preview_graphic_overlay)
-    }
 
     @Throws(IOException::class)
     fun start(cameraSource: CameraSource) {
@@ -65,7 +60,7 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
         if (startRequested && surfaceAvailable) {
             cameraSource?.start(surfaceView.holder)
             requestLayout()
-            graphicOverlay?.let { overlay ->
+            cameraGraphicOverlay?.let { overlay ->
                 cameraSource?.let {
                     overlay.setCameraInfo(it)
                 }
@@ -141,7 +136,7 @@ class CameraSourcePreview(context: Context, attrs: AttributeSet) : FrameLayout(c
     }
 
     private fun isPortraitMode(): Boolean {
-        val orientation: Int = context.getResources().getConfiguration().orientation
+        val orientation: Int = context.resources.configuration.orientation
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             return false
         }
