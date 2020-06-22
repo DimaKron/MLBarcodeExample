@@ -9,14 +9,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.common.base.Objects
-import ru.example.mlbarcodeexample.barcodedetection.BarcodeField
 import ru.example.mlbarcodeexample.barcodedetection.BarcodeProcessor
 import ru.example.mlbarcodeexample.camera.CameraSource
 import ru.example.mlbarcodeexample.camera.CameraSourcePreview
 import ru.example.mlbarcodeexample.camera.GraphicOverlay
 import ru.example.mlbarcodeexample.camera.WorkflowModel
 import java.io.IOException
-import java.util.*
 
 // TODO разрешение
 class MainActivity: AppCompatActivity(), View.OnClickListener {
@@ -154,9 +152,6 @@ class MainActivity: AppCompatActivity(), View.OnClickListener {
 
         workflowModel?.detectedBarcode?.observe(this, Observer { barcode ->
             if (barcode != null) {
-                val barcodeFieldList = ArrayList<BarcodeField>()
-                barcodeFieldList.add(BarcodeField("Raw Value", barcode.rawValue ?: ""))
-
                 //BarcodeResultFragment.show(supportFragmentManager, barcodeFieldList)
                 Toast.makeText(this, "${barcode.rawValue}", Toast.LENGTH_LONG).show()
             }

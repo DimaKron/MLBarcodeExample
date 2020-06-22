@@ -21,7 +21,6 @@ import android.graphics.Canvas
 import android.graphics.Path
 import android.graphics.Point
 import android.graphics.PointF
-import ru.example.mlbarcodeexample.barcodedetection.BarcodeGraphicBase
 import ru.example.mlbarcodeexample.camera.GraphicOverlay
 
 /** Draws the graphic to indicate the barcode result is in loading.  */
