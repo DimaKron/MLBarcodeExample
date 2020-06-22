@@ -45,8 +45,6 @@ class WorkflowModel(application: Application) : AndroidViewModel(application) {
         NOT_STARTED,
         DETECTING,
         DETECTED,
-        CONFIRMING,
-        CONFIRMED,
         SEARCHING,
         SEARCHED
     }
