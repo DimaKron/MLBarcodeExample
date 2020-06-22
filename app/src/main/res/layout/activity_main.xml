@@ -6,12 +6,12 @@
     android:keepScreenOn="true">
 
     <ru.example.mlbarcodeexample.camera.CameraSourcePreview
-        android:id="@+id/camera_preview"
+        android:id="@+id/cameraPreview"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ru.example.mlbarcodeexample.camera.GraphicOverlay
-            android:id="@+id/camera_preview_graphic_overlay"
+            android:id="@+id/cameraGraphicOverlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
