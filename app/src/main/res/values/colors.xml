@@ -3,8 +3,4 @@
     <color name="colorPrimary">@android:color/black</color>
     <color name="colorPrimaryDark">@android:color/black</color>
     <color name="colorAccent">#03DAC5</color>
-
-    <color name="reticle_ripple">#9AFFFFFF</color>
-    <color name="barcode_reticle_background">#99000000</color>
-    <color name="barcode_reticle_stroke">#40000000</color>
 </resources>
